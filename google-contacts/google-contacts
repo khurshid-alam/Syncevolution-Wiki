@@ -5,6 +5,12 @@ Some new terminology introduced after 4.99.x are used here, but it should also w
 = Introduction =
 ||<tablestyle="float:right; font-size: 0.9em; width:40%; background:#F1F1ED; margin: 0 0 1em 1em;" style="padding:0.5em;"><<BR>><<TableOfContents(2)>>||
 
+------------------------------------------------------------------------------------------------
+{X} '''caution:''' '''''The method described here is applicable for desktop(Unity 7) only. It may not work properly on Ubuntu Touch(Unity 8)'''''
+------------------------------------------------------------------------------------------------
+
+
+
 We are going to synchronize google-contacts(Default, Office) with evolution contacts (Personal, Office) respectively.For shake of simplicity we  took similar name for these addressbooks.
 
 These following commands are documented assuming one is using the latest version of syncevolution ('''syncevolution >=1.5.x''')
@@ -22,6 +28,10 @@ These following commands are documented assuming one is using the latest version
 ----
 
 = Setup =
+
+------------------------------------------------------------------------------------------------
+{X} '''BUG:''' Ubuntu online account currently suffers from this bug [[https://bugs.launchpad.net/ubuntu/+source/evolution-data-server/+bug/1433943|#1433943]]. As a result one needs to manually add CardDav scope to '''/usr/share/accounts/services/google-contacts.service'''. See workaround below [[https://help.ubuntu.com/community/SyncEvolution/synchronize-google-contacts-with-evolution-addressbooks#Workaround_For_Bug_.231433943 | here]].
+------------------------------------------------------------------------------------------------
 
 Synchronization between Personal & Default addressbook is shown here.
 
@@ -69,7 +79,7 @@ This username is required in Step1 (For New Methods).
 
 === When using Ubuntu-Online-Accounts(UOA) ===
 {{{
-syncevolution --configure --template SyncEvolution username=uoa:ACCOUNT_ID, google-contacts syncURL=https://www.googleapis.com/.well-known/carddav target-config@gcon
+syncevolution --configure --template SyncEvolution username=uoa:ACCOUNT_ID,google-contacts syncURL=https://www.googleapis.com/.well-known/carddav target-config@gcon
 }}}
 
 Replace '''ACCOUNT_ID''' with your own '''<ACCOUNT_ID>''' number.
@@ -164,4 +174,30 @@ To sync all sources under a peer run:
 {{{
 syncevolution gcon
 }}}
+
+----
+
+= Workaround For Bug #1433943 =
+
+First remove any Google-Account you have authorized in UOA. Then run following command:
+
+{{{
+sudo gedit /usr/share/accounts/services/google-contacts.service
+}}}
+
+Then add "'''https://www.googleapis.com/auth/carddav'''" to '''<setting type="as" name="Scope">''' section. Make sure after adding the scope it will look something like this:
+
+{{{
+<setting name="ClientSecret">3NbR94RM-DTnA81BWjiJe4TP</setting>
+          <setting type="as" name="Scope">['https://www.googleapis.com/auth/userinfo.email','https://mail.google.com/','https://www.google.com/m8/feeds/','https://www.googleapis.com/auth/calendar']</setting>
+}}}
+
+Now add a google account & enable calendar & contacts from UOA. Now run following command: 
+{{{
+syncevolution --print-databases backend=carddav username=uoa:<Account_ID>,google-contacts syncURL=https://www.googleapis.com/.well-known/carddav
+}}}
+
+It will '''fail''' and ask you to grant permission for evolution. Open UOA, and click grant permission. This will make evolution to get required oauth2 token. Now run the above command again. It should print all the contact databases available. Use that url in '''Step3''' in above setup.
+
+Proceed as described above.
 

@@ -65,7 +65,7 @@ ag-tool enable-service <ACCOUNT_ID> <SERVICE_NAME>
   
 At this point try to run following command to know the remote google contacts databse:
 {{{
-syncevolution --print-databases backend=carddav username=uoa:11, google-contacts syncURL=https://www.googleapis.com/.well-known/carddav
+syncevolution --print-databases backend=carddav username=uoa:11,google-contacts syncURL=https://www.googleapis.com/.well-known/carddav
 }}}
 
 If it is successfull the we can proceed with step 1. We will use the required remote database url in step 3.
@@ -189,7 +189,7 @@ Then add "'''https://www.googleapis.com/auth/carddav'''" to '''<setting type="as
 
 {{{
 <setting name="ClientSecret">3NbR94RM-DTnA81BWjiJe4TP</setting>
-          <setting type="as" name="Scope">['https://www.googleapis.com/auth/userinfo.email','https://mail.google.com/','https://www.google.com/m8/feeds/','https://www.googleapis.com/auth/calendar']</setting>
+          <setting type="as" name="Scope">['https://www.googleapis.com/auth/userinfo.email','https://mail.google.com/','https://www.google.com/m8/feeds/','https://www.googleapis.com/auth/calendar','https://www.googleapis.com/auth/carddav']</setting>
 }}}
 
 Now add a google account & enable calendar & contacts from UOA. Now run following command: 
@@ -200,4 +200,3 @@ syncevolution --print-databases backend=carddav username=uoa:<Account_ID>,google
 It will '''fail''' and ask you to grant permission for evolution. Open UOA, and click grant permission. This will make evolution to get required oauth2 token. Now run the above command again. It should print all the contact databases available. Use that url in '''Step3''' in above setup.
 
 Proceed as described above.
-

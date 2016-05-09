@@ -273,4 +273,3 @@ syncevolution --configure <options> [--] <config> [<source> ...]
 }}}
 
 To view all command-line options go to [[https://syncevolution.org/documentation/syncevolution-usage |syncevolution-usage]] wiki page.
-
